@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -e
+
+at () {
+  echo "buildpack=protected-site at=$@"
+}
+
+# Evaluate config file to fill in vars
+erb config/nginx.conf.erb > nginx.conf
+
+# Initialize log directory.
+mkdir -p logs/nginx
+touch logs/nginx/{access,error}.log
+at "logs-initialized"
+
+(
+  # Redirect NGINX logs to stdout.
+  tail -qF -n 0 logs/nginx/*.log
+) &
+
+# NGINX is expected to run in the foreground
+at "nginx-start"
+bin/nginx -p . -c nginx.conf

@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+# usage: bin/compile BUILD_DIR CACHE_DIR ENV_DIR
+
+set -e
+
+source lib/utils.sh
+
+BUILD_DIR=$1
+CACHE_DIR=$2
+ENV_DIR=$3
+
+read_env NGINX_BUILD_SCRIPT
+
+mkdir -p $BUILD_DIR/bin
+cp build/nginx $BUILD_DIR/bin/nginx
+nginx_version=$(./build/nginx -V 2>&1 | head -1 | awk '{ print $NF }')
+notify "Installed $nginx_version to app/bin"
+
+cp bin/start-nginx $BUILD_DIR/bin
+notify "Added start-nginx to app/bin"
+
+mkdir -p $BUILD_DIR/config
+
+cp config/mime.types $BUILD_DIR/config
+notify "Default mime.types copied to app/config"
+
+cp config/nginx.conf.erb $BUILD_DIR/config
+notify "Config template copied to app/config"
+
+if [[ -f "$BUILD_DIR/$NGINX_BUILD_SCRIPT" ]]; then
+  notify "Running build script $NGINX_BUILD_SCRIPT"
+  pushd $BUILD_DIR
+  bash $BUILD_DIR/$NGINX_BUILD_SCRIPT
+  popd
+else
+  notify "warning: Build script not specified"
+fi
+
+exit 0

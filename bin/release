@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# usage: bin/release BUILD_DIR
+
+set -e
+
+cat << EOF
+---
+default_process_types:
+  web: bin/start-nginx
+EOF

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# usage: detect BUILD_DIR
+
+echo "protected-site-buildpack"
+exit 0
