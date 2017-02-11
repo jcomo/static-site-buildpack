@@ -30,9 +30,11 @@ notify "Config template copied to app/config"
 
 if [[ -f "$BUILD_DIR/$NGINX_BUILD_SCRIPT" ]]; then
   notify "Running build script $NGINX_BUILD_SCRIPT"
-  pushd $BUILD_DIR
-  bash $BUILD_DIR/$NGINX_BUILD_SCRIPT
-  popd
+  (
+    export_env_dir
+    cd $BUILD_DIR
+    bash $BUILD_DIR/$NGINX_BUILD_SCRIPT
+  )
 else
   notify "warning: Build script not specified"
 fi
