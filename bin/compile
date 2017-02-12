@@ -10,12 +10,19 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 ENV_DIR=$3
 
-read_env NGINX_BUILD_SCRIPT
+mkdir -p $CACHE_DIR
+
+if [[ ! -f $CACHE_DIR/nginx ]]; then
+  notify "Compiling nginx"
+  bash scripts/build_nginx.sh $CACHE_DIR/nginx
+fi
 
 mkdir -p $BUILD_DIR/bin
-cp build/nginx $BUILD_DIR/bin/nginx
-nginx_version=$(./build/nginx -V 2>&1 | head -1 | awk '{ print $NF }')
-notify "Installed $nginx_version to app/bin"
+cp $CACHE_DIR/nginx $BUILD_DIR/bin/nginx
+notify "Installed nginx to app/bin"
+
+nginx_version=$($BUILD_DIR/bin/nginx -V 2>&1 | head -1 | awk '{ print $NF }')
+notify "Running nginx $nginx_version"
 
 cp bin/start-nginx $BUILD_DIR/bin
 notify "Added start-nginx to app/bin"
@@ -28,15 +35,18 @@ notify "Default mime.types copied to app/config"
 cp config/nginx.conf.erb $BUILD_DIR/config
 notify "Config template copied to app/config"
 
-if [[ -f "$BUILD_DIR/$NGINX_BUILD_SCRIPT" ]]; then
-  notify "Running build script $NGINX_BUILD_SCRIPT"
+read_env NGINX_BUILD_SCRIPT
+BUILD_SCRIPT=${NGINX_BUILD_SCRIPT:-bin/build_site.sh}
+
+if [[ -f "$BUILD_DIR/$BUILD_SCRIPT" ]]; then
+  notify "Running build script $BUILD_SCRIPT"
   (
     export_env_dir
     cd $BUILD_DIR
-    bash $BUILD_DIR/$NGINX_BUILD_SCRIPT
+    bash $BUILD_SCRIPT
   )
 else
-  notify "warning: Build script not specified"
+  notify "warning: Build script not run (not found)"
 fi
 
 exit 0

@@ -2,7 +2,6 @@ daemon off;
 worker_processes <%= ENV["NGINX_WORKERS"] || 2 %>;
 
 events {
-  use epoll;
   worker_connections 1024;
 }
 
@@ -24,8 +23,10 @@ http {
     root <%= ENV["NGINX_ROOT"] || "www/data" %>;
 
     location / {
-      auth_basic "this site is protected";
-      auth_basic_user_file <%= ENV["NGINX_HTPASSWD"] || ".htpasswd" %>;
+      <% if ENV["NGINX_HTPASSWD"] %>
+        auth_basic "this site is protected";
+        auth_basic_user_file <%= ENV["NGINX_HTPASSWD"] %>;
+      <% end %>
     }
   }
 }

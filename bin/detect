@@ -2,5 +2,5 @@
 
 # usage: detect BUILD_DIR
 
-echo "protected-site-buildpack"
+echo "static-site-buildpack"
 exit 0

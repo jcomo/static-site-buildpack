@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 set -e
 set -o pipefail
@@ -10,9 +10,11 @@ set -o pipefail
 # Our motivation for running in a web dyno is that we need a way to
 # download the binary once it is built so we can vendor it in the buildpack.
 
-NGINX_VERSION=${NGINX_VERSION-"1.11.3"}
-PCRE_VERSION=${PCRE_VERSION-"8.39"}
-ZLIB_VERSION=${ZLIB_VERSION-"1.2.11"}
+OUTPUT_FILE=${OUTPUT_FILE:-"/usr/bin/nginx"}
+
+NGINX_VERSION=${NGINX_VERSION:-"1.11.3"}
+PCRE_VERSION=${PCRE_VERSION:-"8.39"}
+ZLIB_VERSION=${ZLIB_VERSION:-"1.2.11"}
 
 nginx_tarball_url=http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz
 pcre_tarball_url=ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-${PCRE_VERSION}.tar.gz
@@ -46,4 +48,4 @@ echo "Building NGINX binary"
   make install
 )
 
-cp /tmp/nginx/sbin/nginx /build/nginx
+cp /tmp/nginx/sbin/nginx $OUTPUT_FILE
