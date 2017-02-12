@@ -10,7 +10,7 @@ set -o pipefail
 # Our motivation for running in a web dyno is that we need a way to
 # download the binary once it is built so we can vendor it in the buildpack.
 
-OUTPUT_FILE=${OUTPUT_FILE:-"/usr/bin/nginx"}
+OUTPUT_FILE=${1:-"/usr/bin/nginx"}
 
 NGINX_VERSION=${NGINX_VERSION:-"1.11.3"}
 PCRE_VERSION=${PCRE_VERSION:-"8.39"}
