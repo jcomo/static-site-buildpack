@@ -24,7 +24,7 @@ http {
 
     <% if ENV["NGINX_FORCE_SSL"] %>
       if ($http_x_forwarded_proto = "http") {
-        rewrite ^ https://$server_name$request_uri? permanent;
+        rewrite ^ https://$host$request_uri? permanent;
       }
     <% end %>
 
