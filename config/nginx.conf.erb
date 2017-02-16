@@ -18,7 +18,6 @@ http {
   error_log logs/nginx/error.log;
 
   server {
-    server_name _;
     listen <%= ENV["PORT"] %>;
     root <%= ENV["NGINX_ROOT"] || "www/data" %>;
 
