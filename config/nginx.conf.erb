@@ -22,6 +22,12 @@ http {
     listen <%= ENV["PORT"] %>;
     root <%= ENV["NGINX_ROOT"] || "www/data" %>;
 
+    <% if ENV["NGINX_FORCE_SSL"] %>
+      if ($http_x_forwarded_proto = "http") {
+        rewrite ^ https://$server_name$request_uri? permanent;
+      }
+    <% end %>
+
     location / {
       <% if ENV["NGINX_HTPASSWD"] %>
         auth_basic "this site is protected";
