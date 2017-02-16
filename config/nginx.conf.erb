@@ -18,9 +18,14 @@ http {
   error_log logs/nginx/error.log;
 
   server {
-    server_name _;
     listen <%= ENV["PORT"] %>;
     root <%= ENV["NGINX_ROOT"] || "www/data" %>;
+
+    <% if ENV["NGINX_FORCE_SSL"] %>
+      if ($http_x_forwarded_proto = "http") {
+        rewrite ^ https://$host$request_uri? permanent;
+      }
+    <% end %>
 
     location / {
       <% if ENV["NGINX_HTPASSWD"] %>

@@ -26,6 +26,7 @@ By default the static root is set as `www/data` but can be configured.
 | ------------------------- | ----------------- | ------------------------------------------------------------------------------------- |
 | `NGINX_VERSION`           | 1.11.3            | The version of NGINX to build. To change, the cache must be purged first              |
 | `NGINX_ROOT`              | www/data          | The directory serving the static site                                                 |
+| `NGINX_FORCE_SSL`         | false             | Forces requests to https if enabled                                                   |
 | `NGINX_BUILD_SCRIPT`      | bin/build_site.sh | The location of the script that will build the site                                   |
 | `NGINX_NOCACHE_FILETYPES` | (none)            | The file extensions to not put under cache control (useful for development servers)   |
 | `NGINX_HTPASSWD`          | (none)            | The location of the htpasswd file to protect the site. Will be unprotected if not set |
