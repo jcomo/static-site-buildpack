@@ -28,5 +28,12 @@ http {
         auth_basic_user_file <%= ENV["NGINX_HTPASSWD"] %>;
       <% end %>
     }
+
+    <% if ENV["NGINX_NOCACHE_FILETYPES"] %>
+      location ~ \.(<%= ENV["NGINX_NOCACHE_FILETYPES"].split(",").join("|") %>)$ {
+        expires -1;
+        add_header Cache-Control no-cache;
+      }
+    <% end %>
   }
 }
