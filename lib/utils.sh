@@ -1,5 +1,5 @@
 notify () {
-  echo "-----> protected-site-buildpack: $@"
+  echo "-----> static-site-buildpack: $@"
 }
 
 read_env () {
