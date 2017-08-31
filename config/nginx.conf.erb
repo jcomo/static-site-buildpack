@@ -32,6 +32,12 @@ http {
         auth_basic "this site is protected";
         auth_basic_user_file <%= ENV["NGINX_HTPASSWD"] %>;
       <% end %>
+
+      <% if ENV["NGINX_ALLOW_POST"] %>
+        # A bit of magic to "forward" 405s to the same url
+        # but using a GET instead
+        error_page 405 = $uri;
+      <% end %>
     }
 
     <% if ENV["NGINX_NOCACHE_FILETYPES"] %>
